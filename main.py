@@ -1,4 +1,4 @@
-import discord, datetime, asyncio, pytz
+import discord, datetime, asyncio, pytz, os
 
 client = discord.Client()
 
@@ -52,4 +52,4 @@ async def on_message(message):
 	elif args[0] == "$help":
 		await remindercmdusage(message, "$help was triggered")
 
-client.run("NzQ0MjUxMTg4MjAzMDk0MDY5.Xzgf7g.oe-lpJwHcRq0XVDdaiCeKKkZGUU")
+client.run(os.getenv('BOT_TOKEN'))
