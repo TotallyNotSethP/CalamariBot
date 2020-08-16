@@ -1,7 +1,8 @@
 import discord, datetime, asyncio, pytz, os
+from discord.ext import commands
 
 client = discord.Client()
-bot    = discord.ext.commands.Bot(command_prefix="$")
+bot    = commands.Bot(command_prefix="$")
 
 async def remindercmdusage(message, e):
 	await message.channel.send("""Usage: `$reminder [01-12]:[00-59][am|pm] [01-12]-[01-31]-[00-99] <Message>`
