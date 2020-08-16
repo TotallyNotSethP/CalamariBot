@@ -14,7 +14,7 @@ async def on_ready():
 	print("Login successful for bot: {0.user}".format(client))
 
 @bot.command()
-async def reminder(ctx, time_, date_, *, message)
+async def reminder(ctx, time_, date_, *, message):
 	print(f"$reminder invoked with time: \"{time_}\", date: \"{date_}\", message: \"{message}\"")
 
 	try:
