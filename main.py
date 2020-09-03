@@ -3,7 +3,8 @@ import discord, datetime, asyncio, pytz, os, psycopg2, threading, psycopg2.extra
 client = discord.Client()
 
 def start_await(func, *args, **kwargs):
-	loop = asyncio.get_event_loop()
+	loop = asyncio.new_event_loop()
+	asyncio.set_event_loop(loop)
 	# Blocking call which returns when the display_date() coroutine is done
 	loop.run_until_complete(func(*args, **kwargs))
 	loop.close()
