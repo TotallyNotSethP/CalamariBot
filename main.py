@@ -29,7 +29,7 @@ async def on_ready():
 	sql_io = sql.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 	sql_io.execute("SELECT * FROM reminders")
 	for reminder in sql_io:
-		threading.Thread(target=start_await, args=(on_message, "$reminder {date} {time} {message}".format(date = reminder["dateandtime"].strftime("%m-%d-%y"), time = reminder["dateandtime"].strftime("%I:%M%p"), message = reminder["message"]),), kwargs={"from_on_ready": True, "channel_id": reminder["channel_id"]}).start()
+		threading.Thread(target=start_await, args=(on_message, "$reminder {time} {date} {message}".format(date = reminder["dateandtime"].strftime("%m-%d-%y"), time = reminder["dateandtime"].strftime("%I:%M%p"), message = reminder["message"]),), kwargs={"from_on_ready": True, "channel_id": reminder["channel_id"]}).start()
 
 @client.event
 async def on_message(message, from_on_ready=False, channel_id=None):
