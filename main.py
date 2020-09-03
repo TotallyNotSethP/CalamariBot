@@ -65,6 +65,8 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 					dateandtime = pytz.timezone("America/Los_Angeles").localize(datetime.datetime.combine(date, time).replace(second = 0, microsecond = 0))
 					sentmessage = await message.channel.send("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 					sql_io.execute("INSERT INTO reminders (message, dateandtime, channel_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING", (reminder_message, dateandtime, message.channel.id))
+				else:
+					dateandtime = datetime.datetime.combine(date, time).replace(second = 0, milisecond = 0)
 				print("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 				await asyncio.sleep(10)
 				if not from_on_ready:
