@@ -1,4 +1,4 @@
-import discord, datetime, asyncio, pytz, os, psycopg2, threading
+import discord, datetime, asyncio, pytz, os, psycopg2, threading, psycopg2.extras
 
 client = discord.Client()
 
