@@ -73,7 +73,7 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 
 				while True:
 					currentdateandtime = pytz.utc.localize(datetime.datetime.now().replace(second = 0, microsecond = 0))
-					print("Checking if {current} == {set}...".format(current = currentdateandtime.strftime("%m-%d-%y %I:%M%p"), set = dateandtime.strftime("%m-%d-%y %I:%M%p")))
+					print("Checking if {current} == {set}...".format(current = currentdateandtime, set = dateandtime))
 					if currentdateandtime == dateandtime:
 						print("Check succeeded!")
 						break
