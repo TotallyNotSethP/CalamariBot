@@ -29,11 +29,13 @@ async def on_ready():
 	sql_io = sql.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 	sql_io.execute("SELECT * FROM reminders")
 	for reminder in sql_io:
-		threading.Thread(target=start_await, args=(on_message, "$reminder {time} {date} {message}".format(date = reminder["dateandtime"].strftime("%m-%d-%y"), time = reminder["dateandtime"].strftime("%I:%M%p"), message = reminder["message"]),), kwargs={"from_on_ready": True, "channel_id": reminder["channel_id"]}).start()
+		print("Found pending reminder on {date} at {time} with message \"{message}\"".format(date = reminder["dateandtime"].strftime("%m-%d-%y"), time = reminder["dateandtime"].strftime("%I:%M%p"), message = reminder["message"]))
+		threading.Thread(target=start_await, args=(on_message, "$reminder {time} {date} {message}".format(date = reminder["dateandtime"].strftime("%m-%d-%y"), time = reminder["dateandtime"].strftime("%I:%M%p"), message = reminder["message"])), kwargs={"from_on_ready": True, "channel_id": reminder["channel_id"]}).start()
 
 @client.event
 async def on_message(message, from_on_ready=False, channel_id=None):
 	global sql, sql_io, client
+	print(f"Recieved message \"{message}\" (from on_ready = {from_on_ready})")
 	if not from_on_ready:
 		if message.author == client.user:
 			return
@@ -63,6 +65,7 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 				if not from_on_ready:
 					sentmessage = await message.channel.send("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 					sql_io.execute("INSERT INTO reminders (message, dateandtime, channel_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING", (reminder_message, dateandtime, message.channel.id))
+				print("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 				await asyncio.sleep(10)
 				if not from_on_ready:
 					await message.delete()
@@ -70,11 +73,14 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 
 				while True:
 					currentdateandtime = pytz.utc.localize(datetime.datetime.now().replace(second = 0, microsecond = 0))
+					print("Checking if {current} == {set}...".format(current = currentdateandtime.strftime("%m-%d-%y %I:%M%p"), set = dateandtime.strftime("%m-%d-%y %I:%M%p")))
 					if currentdateandtime == dateandtime:
+						print("Check succeeded!")
 						break
 					await asyncio.sleep(10)
 				if not from_on_ready:
 					await message.channel.send("@everyone " + reminder_message)
+					print("Reminder sent!")
 				else:
 					await client.channels.get(str(channel_id)).send("@everyone " + reminder_message)
 				sql_io.execute("DELETE FROM reminders WHERE dateandtime <= %s", (dateandtime,))
