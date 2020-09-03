@@ -17,7 +17,7 @@ Example: `$reminder 08:00am 12-25-20 Christmas!` outputs `@everyone Christmas!` 
 async def on_ready():
 	global sql, sql_io
 	print("Login successful for bot: {0.user}".format(client))
-	sql = psycopg2.connect(os.environ['DATABASE_URL'], ssl_mode='require')
+	sql = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
 	sql_io = sql.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 	sql_io.withhold = True
 	sql_io.execute("SELECT * FROM reminders")
