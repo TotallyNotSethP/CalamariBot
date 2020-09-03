@@ -34,10 +34,14 @@ async def on_ready():
 @client.event
 async def on_message(message, from_on_ready=False, channel_id=None):
 	global sql, sql_io, client
-	if message.author == client.user:
-		return
-
-	args = message.content.split(" ")
+	if not from_on_ready:
+		if message.author == client.user:
+			return
+	
+	if not from_on_ready:
+		args = message.content.split(" ")
+	else:
+		args = message.split(" ")
 
 	if args[0] == "$reminder":
 		try:
@@ -60,8 +64,9 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 					sentmessage = await message.channel.send("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 					sql_io.execute("INSERT INTO reminders (message, dateandtime, channel_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING", (reminder_message, dateandtime, message.channel.id))
 				await asyncio.sleep(10)
-				await message.delete()
-				await sentmessage.delete()
+				if not from_on_ready:
+					await message.delete()
+					await sentmessage.delete()
 
 				while True:
 					currentdateandtime = pytz.utc.localize(datetime.datetime.now().replace(second = 0, microsecond = 0))
