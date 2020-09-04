@@ -17,4 +17,4 @@ sql_io.execute("SELECT * FROM test")
 
 for row in sql_io:
     print(row["dateandtime"].replace(
-          second = 0, microsecond = 0).astimezone("America/Los_Angeles"))
+          second = 0, microsecond = 0).astimezone(pytz.timezone("America/Los_Angeles")))
