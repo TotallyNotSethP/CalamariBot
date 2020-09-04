@@ -16,6 +16,5 @@ sql_io.execute("INSERT INTO test (dateandtime) VALUES (%s)",
 sql_io.execute("SELECT * FROM test")
 
 for row in sql_io:
-    print(pytz.timezone("America/Los_Angeles").localize(
-          row["dateandtime"].replace(
-          second = 0, microsecond = 0)))
+    print(row["dateandtime"].replace(
+          second = 0, microsecond = 0).astimezone("America/Los_Angeles"))
