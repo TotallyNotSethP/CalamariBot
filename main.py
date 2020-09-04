@@ -35,7 +35,6 @@ async def on_ready():
 @client.event
 async def on_message(message, from_on_ready=False, channel_id=None):
 	global sql, sql_io, client
-	print(f"Recieved message \"{message}\" (from on_ready = {from_on_ready})")
 	if not from_on_ready:
 		if message.author == client.user:
 			return
@@ -66,8 +65,7 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 				if not from_on_ready:
 					sentmessage = await message.channel.send("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 					sql_io.execute("INSERT INTO reminders (message, dateandtime, channel_id) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING", (reminder_message, dateandtime, message.channel.id))
-				else:
-					dateandtime = datetime.datetime.combine(date, time).replace(second = 0, microsecond = 0)
+					
 				print("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
 				await asyncio.sleep(10)
 				if not from_on_ready:
