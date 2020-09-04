@@ -61,7 +61,7 @@ async def on_message(message, from_on_ready=False, channel_id=None):
 				else:
 					reminder_message = "Here's a reminder set on {date} at {time}!".format(date = datetime.datetime.now().strftime("%m-%d-%y"), time = datetime.datetime.now().strftime("%I:%M%p"))
 					
-				dateandtime = datetime.datetime.combine(date, time).replace(second = 0, microsecond = 0)
+				dateandtime = pytz.timezone("America/Los_Angeles").localize(datetime.datetime.combine(date, time).replace(second = 0, microsecond = 0))
 				
 				if not from_on_ready:
 					sentmessage = await message.channel.send("Reminder set for {date} at {time}!".format(date = date.strftime("%m-%d-%y"), time = time.strftime("%I:%M%p")))
